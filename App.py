@@ -120,7 +120,7 @@ if select == 'Twitter Hashtags':
 
         if option == 'Detailed Analysis':
 
-            st.header('Donut Chart on How People are Reacting on ' + searchTerm +
+            st.header('Donut Chart of How People are Reacting on ' + searchTerm +
                       ' by Analyzing '+str(noOfSearchTerms) + ' Recent Tweets.')
 
             labels = ['Positive ['+str(positive)+'%]', 'Neutral [' +
