@@ -2,7 +2,6 @@ streamlit
 textblob
 numpy
 pandas
-csv
 tweepy
 plotly
 matplotlib
