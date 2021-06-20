@@ -223,12 +223,71 @@ elif select == 'Language Translator':
     st.image("Language-Translator-2-600x280-removebg-preview.png", width=370)
 
 elif select == 'Multiple Reviews':
+    st.warning("Note: There should be a column named 'Reviews' in your csv file")
     filename2 = st.file_uploader(
         "Select file", type=[".xlsx", ".xls", ".csv"],)
 
     if filename2 is not None:
-        df = pd.read_csv(filename2)
-        st.write(df)
+
+        fi = pd.read_csv(filename2, usecols=["Reviews"], squeeze=True)
+        st.write(fi)
+        positive = 0
+        negative = 0
+        neutral = 0
+        polarity = 0
+        noOfSearchTerms = 0
+        for row in fi:
+            i = str(row)
+            analysis = TextBlob(i)
+            polarity += analysis.sentiment.polarity
+
+            if(analysis.sentiment.polarity == 0):
+                neutral += 1
+
+            elif(analysis.sentiment.polarity < 0.00):
+                negative += 1
+
+            elif(analysis.sentiment.polarity > 0.00):
+                positive += 1
+
+            noOfSearchTerms += 1
+
+        positive = percentage(positive, noOfSearchTerms)
+
+        negative = percentage(negative, noOfSearchTerms)
+
+        neutral = percentage(neutral, noOfSearchTerms)
+
+        polarity = percentage(polarity, noOfSearchTerms)
+
+        positive = format(positive, '.2f')
+        neutral = format(neutral, '.2f')
+        negative = format(negative, '.2f')
+
+        st.markdown("")
+        st.header('Donut Chart of Uploaded CSV Data:')
+
+        labels = ['Positive ['+str(positive)+'%]', 'Neutral [' +
+                  str(neutral)+'%]', 'Negative['+str(negative)+'%]']
+
+        sizes = [positive, neutral, negative]
+
+        fig = go.Figure()
+
+        x = ["Negative", "Positive", "Neutral"]
+        y = [negative, positive,  neutral]
+
+        colors = ['green', 'blue', 'red']
+
+        layout = go.Layout(title='Donut Chart',)
+
+        fig = go.Figure(
+            data=[go.Pie(labels=labels, values=sizes, hole=.4, )])
+
+        fig.update_traces(marker=dict(colors=colors))
+
+        st.plotly_chart(fig, use_container_width=True)
+
     st.header("Sample CSV File:")
     df = pd.read_csv('file.csv')
     st.dataframe(df)
